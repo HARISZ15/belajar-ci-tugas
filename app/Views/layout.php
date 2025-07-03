@@ -35,6 +35,10 @@ if (uri_string() != "") {
     <!-- Template Main CSS File -->
     <link href="<?php echo base_url() ?>NiceAdmin/assets/css/style.css" rel="stylesheet">
 
+    <!-- Flatpickr CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+
     <!-- =======================================================
   * Template Name: NiceAdmin
   * Updated: Mar 09 2023 with Bootstrap v5.2.3
@@ -110,6 +114,16 @@ if (uri_string() != "") {
     <script src="<?php echo base_url() ?>NiceAdmin/assets/js/main.js"></script>
 
     <?= $this->renderSection('script') ?> 
+
+    <!-- Flatpickr JS -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+  flatpickr(".datepicker", {
+    dateFormat: "d/m/Y",
+    allowInput: true
+  });
+</script>
+
 
 </body>
 

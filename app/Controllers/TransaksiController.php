@@ -32,17 +32,23 @@ class TransaksiController extends BaseController
     }
 
     public function cart_add()
-    {
-        $this->cart->insert(array(
-            'id'        => $this->request->getPost('id'),
-            'qty'       => 1,
-            'price'     => $this->request->getPost('harga'),
-            'name'      => $this->request->getPost('nama'),
-            'options'   => array('foto' => $this->request->getPost('foto'))
-        ));
-        session()->setflashdata('success', 'Produk berhasil ditambahkan ke keranjang. (<a href="' . base_url() . 'keranjang">Lihat</a>)');
-        return redirect()->to(base_url('/'));
-    }
+{
+    $hargaAsli = $this->request->getPost('harga');
+    $diskon = session()->get('diskon_nominal') ?? 0;
+    $hargaSetelahDiskon = $hargaAsli - $diskon;
+
+    $this->cart->insert(array(
+        'id'        => $this->request->getPost('id'),
+        'qty'       => 1,
+        'price'     => $hargaSetelahDiskon,
+        'name'      => $this->request->getPost('nama'),
+        'options'   => array('foto' => $this->request->getPost('foto'))
+    ));
+
+    session()->setFlashdata('success', 'Produk berhasil ditambahkan ke keranjang. (<a href="' . base_url() . 'keranjang">Lihat</a>)');
+    return redirect()->to(base_url('/'));
+}
+
 
     public function cart_clear()
     {
@@ -74,11 +80,24 @@ class TransaksiController extends BaseController
 
     public function checkout()
 {
-    $data['items'] = $this->cart->contents();
-    $data['total'] = $this->cart->total();
+    $diskon = session()->get('diskon_nominal') ?? 0;
+    $items = $this->cart->contents();
+    $total = 0;
+
+    foreach ($items as $key => $item) {
+        $hargaAsli = $item['price'];
+        $hargaSetelahDiskon = max($hargaAsli - $diskon, 0); // pastikan tidak negatif
+        $items[$key]['price'] = $hargaSetelahDiskon;
+        $items[$key]['subtotal'] = $hargaSetelahDiskon * $item['qty'];
+        $total += $items[$key]['subtotal'];
+    }
+
+    $data['items'] = $items;
+    $data['total'] = $total;
 
     return view('v_checkout', $data);
 }
+
 
 public function getLocation()
 {

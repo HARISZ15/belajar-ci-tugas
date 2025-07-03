@@ -17,18 +17,25 @@ Proyek ini adalah platform toko online yang dibangun menggunakan [CodeIgniter 4]
 - Keranjang Belanja
   - Tambah/hapus produk
   - Update jumlah produk
+  - Harga otomatis dikurangi **diskon** jika tersedia pada hari ini
 - Sistem Transaksi
   - Proses checkout
   - Riwayat transaksi
+  - Harga yang disimpan dalam transaksi juga sudah dipotong diskon
 - Panel Admin
   - Manajemen produk (CRUD)
   - Manajemen kategori
   - Laporan transaksi
   - Export data ke PDF
+  - Manajemen diskon harian (tidak boleh ada dua tanggal yang sama)
 - Sistem Autentikasi
   - Login/Register pengguna
   - Manajemen akun
+  - Saat login, sistem otomatis mengecek dan menyimpan diskon hari ini ke session
 - UI Responsif dengan NiceAdmin template
+- Dashboard Webservice
+  - Menampilkan semua transaksi menggunakan API berbasis REST
+  - Menampilkan data total harga, jumlah item, ongkir, dan status transaksi
 
 ## Persyaratan Sistem
 
@@ -79,11 +86,24 @@ Proyek menggunakan struktur MVC CodeIgniter 4:
   - AuthController.php - Autentikasi pengguna
   - ProdukController.php - Manajemen produk
   - TransaksiController.php - Proses transaksi
+  - DiskonController.php` - Manajemen data diskon (CRUD) khusus admin
+  - ApiController.php` - Webservice REST API untuk dashboard eksternal
 - app/Models - Model untuk interaksi database
   - ProductModel.php - Model produk
   - UserModel.php - Model pengguna
+  - TransactionModel.php` - Model transaksi utama
+  - TransactionDetailModel.php` - Model untuk detail produk per transaksi
+  - DiskonModel.php` - Model diskon per tanggal
 - app/Views - Template dan komponen UI
+  - v_home.php - Halaman utama
   - v_produk.php - Tampilan produk
+  - v_produk_kategori.php - Halaman untuk mengedit produk
   - v_keranjang.php - Halaman keranjang
+  - v_profil.php - Halaman profil untuk melihat profil dan history transaksi
+  - v_checkout.php` - Halaman checkout transaksi
+  - v_login.php` - Halaman login
+  - v_diskon.php` - Tampilan manajemen diskon
+  - diskon/create.php` dan `diskon/edit.php` - Form tambah/edit diskon
 - public/img - Gambar produk dan aset
 - public/NiceAdmin - Template admin
+- public/dashboard-toko/index.php - Dashboard eksternal (webservice) untuk melihat data transaksi dengan jumlah item dan status

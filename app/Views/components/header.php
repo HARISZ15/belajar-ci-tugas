@@ -16,6 +16,12 @@
         </form>
     </div><!-- End Search Bar -->
 
+   <?php if (session()->has('diskon_nominal')) : ?>
+    <div style="background-color: #198754; color: white; padding: 8px 16px; font-weight: bold; border-radius: 5px; font-size: 14px; height: 40px; display: flex; align-items: center;">
+        Hari ini ada diskon <?= number_format(session()->get('diskon_nominal')) ?> per item
+    </div>
+<?php endif; ?>
+
     <nav class="header-nav ms-auto">
         <ul class="d-flex align-items-center">
 

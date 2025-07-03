@@ -39,6 +39,18 @@ class AuthController extends BaseController
                         'isLoggedIn' => TRUE
                     ]);
 
+                    //proses pencarian diskon
+                     $tanggalHariIni = date('Y-m-d');
+                     $diskon = db_connect()
+                    ->table('diskon')
+                    ->where('tanggal', $tanggalHariIni)
+                    ->get()
+                    ->getRow(); 
+
+                    if ($diskon) {
+                        session()->set('diskon_nominal', $diskon->nominal);
+                        }
+
                     return redirect()->to(base_url('/'));
                 } else {
                     session()->setFlashdata('failed', 'Kombinasi Username & Password Salah');
